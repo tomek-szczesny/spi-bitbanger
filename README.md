@@ -2,8 +2,14 @@
 An universal SPI GPIO bitbanger for any single board computer.
 This is a debug tool, mostly.
 
-This simple program acts as a SPI Master, that sends bytes from stdin and at the same time writes response to stdout, even if the slave does not send any meaningful data.
-After stdin is fully sent, the program terminates. If you want to read the following response, add some dummy bytes.
+This program acts as SPI master, thus it controls the transmission and generates SCK.
+
+SPI bus always writes and reads data simultaneously on each clock cycle.
+This program writes data from stdin to MOSI, and captures MISO data to stdout. The process continues until either of the pipes becomes invalid.
+
+Most Slave chips expect to receive commands from the Master and then return a response while ignoring additional MOSI data. In this scenario, you'd want to pad the input data with a few dummy bytes to capture the response.
+
+I achieved 200kbps on Odroid M1S (RK3566), albeit with clearly visible duty cycle skew and period jitter. Low speed is due to the libgpiod overhead.
 
 ## Installation
 
@@ -28,9 +34,8 @@ make build
 
 ## Usage
 
-Pipe data into stdin and from stdout to interact with an SPI device.
+Pipe data into stdin and from stdout to interact with a SPI device.
 
-SPI bus always writes and reads data at the same time, only parts of it get ignored by one of the sides. This program does not attempt to make any sense of the data. It writes bytes and reads MISO at the same time. The program terminates when stdin pipe becomes invalid.
 
 Here is a sample loopback test (MISO and MOSI shorted together):
 

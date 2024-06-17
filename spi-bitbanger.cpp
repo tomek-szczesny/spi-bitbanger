@@ -85,8 +85,6 @@ void IO() {
 	gpiod_line_set_value(CS, 0);
 	if (!cpha) {
 		gpiod_line_set_value(MOSI, ((obyte >> ctr) & (0x1)));
-		ibyte += gpiod_line_get_value(MISO) >> ctr;
-		//ctr -=1 ;
 	}
 
 	while (!io_closing) {
@@ -104,7 +102,7 @@ void IO() {
 			if (ctr < 0) {
 				std::cout << ibyte; ibyte = 0;
 				obyte = std::cin.get();
-				if (!std::cin) break;
+				if (!std::cin || !std:cout) break;
 				ctr = 7;
 			}
 		}
