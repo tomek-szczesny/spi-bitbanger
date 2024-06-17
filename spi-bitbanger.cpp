@@ -102,7 +102,7 @@ void IO() {
 			if (ctr < 0) {
 				std::cout << ibyte; ibyte = 0;
 				obyte = std::cin.get();
-				if (!std::cin || !std:cout) break;
+				if (!std::cin || !std::cout) break;
 				ctr = 7;
 			}
 		}
